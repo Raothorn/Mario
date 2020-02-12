@@ -1,1 +1,347 @@
-Hello world
+<html>
+		<script src = "doorprize.js"></script>
+	<head>
+		<title>MarioKart 9 aka Door Prize</title>
+		<style>
+			.map{
+				position: absolute;
+				opacity: 0;
+				left: 20px;
+				top: 20px;
+				width: 600px;
+				height: 600px;
+				z-index: -10;
+			}
+			
+			.cam{
+				position: absolute;
+				left: 170px;
+				top: 85px;
+				visibility: hidden;
+			}
+			
+			div{
+			    width:640px; 
+			    height:640px;
+			    margin: 0 auto; 
+			    position:absolute;
+				visibility: hidden;
+			}
+			
+			.win{
+				position: absolute;
+				left: 200px;
+				top: 100px;
+				visibility: hidden;
+				z-index: 5;
+			}
+			
+			.raceScreen{
+				left: 100px;
+				top: 20px;
+			}
+			
+			.can{
+				position: absolute;
+				visibility: hidden;
+				z-index: 2;
+			}
+		
+			.winner{
+				
+				font-family: MarioKart;
+				background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(104,247,33,1)), color-stop(49%,rgba(246,247,32,1)), color-stop(51%,rgba(246,247,32,1)), color-stop(91%,rgba(248,91,20,1)), color-stop(100%,rgba(200,30,4,1)));
+				-webkit-background-clip: text;
+				-webkit-text-fill-color: transparent;
+				font-size: 5em;
+				z-index: 3;
+			}
+			
+			span{
+				font-family: MarioKart;
+				background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(104,247,33,1)), color-stop(49%,rgba(246,247,32,1)), color-stop(51%,rgba(246,247,32,1)), color-stop(91%,rgba(248,91,20,1)), color-stop(100%,rgba(200,30,4,1)));
+				-webkit-background-clip: text;
+				-webkit-text-fill-color: transparent;
+				-webkit-text-stroke-color: black;
+				-webkit-text-stroke-width: 2px;
+				font-size: 3em;
+				z-index: 3;
+			}
+			
+			.scoreboard{
+				visibility: visible;
+				position:absolute;
+				left: 500px;
+				top: 50px;
+				width: 700px;
+				height: 700px;
+			}
+						
+			@font-face {
+				font-family: 'MarioKart';
+				src: url('Resources/mkfont.ttf');
+			}
+			
+			#newbutton{
+				position:relative;
+				top: 20px;
+				left: 10px;
+			}
+			
+			p{
+				color:red;
+				font-size:20px;
+				position:relative;
+				top: 600px;
+				left: 100px;
+			}
+			
+		</style>
+	</head>
+	<body id="entire">
+		<div id="participants" display: inline-block;">
+			Please enter the names of at least 5 people (one name per line). <br>
+			<textarea id="namefield" rows="30" cols="50"></textarea><br>
+			<input type="button" id="submitbutton" value="Pick Contestants">
+		</div>
+		
+		<div id="contestants">
+			The contestants are: <br>
+			<img id="icon0"><span id="name0"></span><br id="break">
+			<img id="icon1"><span id="name1"></span><br>
+			<img id="icon2"><span id="name2"></span><br>
+			<img id="icon3"><span id="name3"></span><br>
+			<img id="icon4"><span id="name4"></span><br>
+			<input type="button" id="gobutton" value="Race">
+			<input type="button" id="cancelbutton" value="Cancel">
+		</div>
+		
+		<div class="raceScreen" id="race">
+			<img class="map" id="map" src="Resources/Map/rainbowroad.png">
+			<canvas class="can" id="myCanvas" width="640" height="640"></canvas><br>
+			<div class="scoreboard" id="scoreboard"></div>
+		</div>
+		
+		
+		
+		<div id = "winstuff" class = "win">
+			<span id = "winner">Something</span>
+			<input type = "button" id = "newbutton" value = "New Race">
+		</div>
+		
+		<audio id = "countsound">
+			<source src = "Resources/countdown.wav" type = "audio/wav">
+		</audio>
+		<br>
+		
+		<p>
+			MarioKart is owned by Nintendo.
+			All images are from <a href = "http://www.spriters-resource.com">spriters-resource.com</a>
+		</p>
+		<!--None of the following is visible to the user at any point in time.-->
+	 	<p id="path1" style="visibility: hidden; display: none;">
+			0,0
+			408,21
+			423,55 
+			423,223
+			408,242
+			190,243
+			155,282
+			155,385
+			180,410
+			547,410
+			572,420
+			562,543
+			546,556
+			331,560
+			279,542
+			115,543
+			83,556
+			60,556
+			36,533
+			36,300
+			36,71
+			60,41
+			200,41 
+		</p>
+		
+		<p id="path2" style="visibility: hidden; display: none;">
+			0,0		
+			408,41
+			423,55
+			438,223
+			413,251
+			202,250
+			170,283
+			168,379
+			190,404
+			558,405
+			572,420
+			572,547
+			552,562
+			329,564
+			279,553
+			115,552
+			81,562
+			46,562
+			31,538
+			31,300
+			31,56
+			61,32
+			200,32
+		</p>
+
+		
+		<p id="path3" style="visibility: hidden; display: none;">
+			0,0
+			408,31
+			423,55
+			463,242
+			443,262
+			215,262
+			196,278
+			200,384
+			225,400
+			567,395
+			588,421
+			587,552
+			566,567
+			329,569
+			279,582
+			116,582
+			82,572
+			36,572
+			14,545
+			14,250
+			14,46
+			46,16
+			200,16
+		</p>
+	
+		<p id="progress" style="visibility: hidden; display: none;">
+			xgreaterthan 60#
+			xgreaterthan 80#
+			xgreaterthan 100#
+			xgreaterthan 120#
+			xgreaterthan 140#
+			xgreaterthan 160#
+			xgreaterthan 180#
+			xgreaterthan 200#
+			xgreaterthan 220#
+			xgreaterthan 240#
+			xgreaterthan 260#
+			xgreaterthan 280#
+			xgreaterthan 300#
+			xgreaterthan 320#
+			xgreaterthan 340#
+			xgreaterthan 360#
+			xgreaterthan 380#
+			xgreaterthan 400#
+			xgreaterthan 420#
+			ygreaterthan 44#
+			ygreaterthan 64#
+			ygreaterthan 84#
+			ygreaterthan 104#
+			ygreaterthan 124#
+			ygreaterthan 144#
+			ygreaterthan 164#
+			ygreaterthan 184#
+			ygreaterthan 204#
+			ygreaterthan 224#
+			xlessthan 432#
+			xlessthan 412#
+			xlessthan 392#
+			xlessthan 372#
+			xlessthan 352#
+			xlessthan 332#
+			xlessthan 312#
+			xlessthan 292#
+			xlessthan 272#
+			xlessthan 252#
+			xlessthan 232#
+			xlessthan 212#
+			ygreaterthan 271#
+			ygreaterthan 291#
+			ygreaterthan 311#
+			ygreaterthan 331#
+			ygreaterthan 351#
+			xgreaterthan 202#
+			xgreaterthan 222#
+			xgreaterthan 242#
+			xgreaterthan 262#
+			xgreaterthan 282#
+			xgreaterthan 302#
+			xgreaterthan 322#
+			xgreaterthan 342#
+			xgreaterthan 362#
+			xgreaterthan 382#
+			xgreaterthan 402#
+			xgreaterthan 422#
+			xgreaterthan 442#
+			xgreaterthan 462#
+			xgreaterthan 482#
+			xgreaterthan 502#
+			xgreaterthan 522#
+			xgreaterthan 542#
+			ygreaterthan 409#
+			ygreaterthan 429#
+			ygreaterthan 449#
+			ygreaterthan 469#
+			ygreaterthan 489#
+			ygreaterthan 509#
+			ygreaterthan 529#
+			xlessthan 557#
+			xlessthan 537#
+			xlessthan 517#
+			xlessthan 497#
+			xlessthan 477#
+			xlessthan 457#
+			xlessthan 437#
+			xlessthan 417#
+			xlessthan 397#
+			xlessthan 377#
+			xlessthan 357#
+			xlessthan 337#
+			xlessthan 317#
+			xlessthan 297#
+			xlessthan 277#
+			xlessthan 257#
+			xlessthan 237#
+			xlessthan 217#
+			xlessthan 197#
+			xlessthan 177#
+			xlessthan 157#
+			xlessthan 137#
+			xlessthan 117#
+			xlessthan 97#
+			xlessthan 77#
+			xlessthan 57#
+			ylessthan 549#
+			ylessthan 529#
+			ylessthan 509#
+			ylessthan 489#
+			ylessthan 469#
+			ylessthan 449#
+			ylessthan 429#
+			ylessthan 409#
+			ylessthan 389#
+			ylessthan 369#
+			ylessthan 349#
+			ylessthan 329#
+			ylessthan 309#
+			ylessthan 289#
+			ylessthan 269#
+			ylessthan 249#
+			ylessthan 229#
+			ylessthan 209#
+			ylessthan 189#
+			ylessthan 169#
+			ylessthan 149#
+			ylessthan 129#
+			ylessthan 109#
+			ylessthan 89#
+			ylessthan 69#
+			xgreaterthan 150
+		</p>	
+	</body>
+</html>
